@@ -322,6 +322,14 @@ table.cmp { width: 100%; border-collapse: collapse; min-width: 680px; color: var
 .how3 strong { color: var(--ink); }
 @media (max-width: 640px) { .how3 { grid-template-columns: 1fr; } }
 .db { display: none; } @media (max-width: 980px) { .dr { display: none; } .db { display: inline; } }
+.route.big { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 18px; }
+.route.big label { display: grid; gap: 4px; border-radius: 14px; padding: 14px 16px; font-size: 16px; }
+.route.big label small { margin-left: 0; font-size: 13px; }
+.route.big label em { font-style: normal; font-size: 12.5px; color: #9DBCFF; font-weight: 600; }
+@media (max-width: 640px) { .route.big { grid-template-columns: 1fr; } }
+.kpis.n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } .kpis.n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .kpis.n1 { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 980px) { .kpis.n3 { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .kpis.n2 { grid-template-columns: 1fr; } }
 .h1sub { display: block; font-size: clamp(18px, 2.2vw, 24px); font-weight: 600; letter-spacing: -.3px; line-height: 1.3; color: #B9C7E6; margin-top: 10px; }
 .roles { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
 .roles input { position: absolute; opacity: 0; pointer-events: none; }
@@ -359,12 +367,114 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
   .lw .body { grid-template-columns: 1fr; } .lw .tree { display: none; }
 }
 @media (max-width: 560px) { .compare { grid-template-columns: 1fr; } }
+
+/* ===== UX v4: menos texto, más interacción ===== */
+.mmap { display: flex; align-items: center; gap: 0; margin: 0 0 22px; flex-wrap: wrap; row-gap: 10px; }
+.mnode { display: grid; justify-items: center; gap: 4px; width: 64px; text-align: center; font-size: 10.5px; color: var(--dim); font-weight: 700; line-height: 1.15; animation: fin .4s ease-out backwards; }
+.mnode .d { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 19px; background: var(--panel); border: 2px solid var(--line); transition: all .4s; }
+.mnode.done .d { background: rgba(43,196,125,.16); border-color: var(--ok); font-size: 16px; color: var(--ok); font-weight: 800; }
+.mnode.now { color: var(--ink); } .mnode.now .d { border-color: var(--accent); background: rgba(59,123,255,.2); box-shadow: 0 0 0 0 rgba(59,123,255,.6); animation: glow 1.8s ease-out infinite; transform: scale(1.12); }
+@keyframes glow { 0% { box-shadow: 0 0 0 0 rgba(59,123,255,.55); } 100% { box-shadow: 0 0 0 14px rgba(59,123,255,0); } }
+.mlink { flex: 1 1 18px; min-width: 14px; max-width: 60px; height: 2px; background: var(--line); margin-bottom: 18px; position: relative; overflow: hidden; }
+.mlink.done::after { content: ''; position: absolute; inset: 0; background: var(--ok); animation: grow .6s ease-out backwards; transform-origin: left; }
+@keyframes grow { from { transform: scaleX(0); } }
+.scene { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
+.clock { font-family: var(--mono); background: #050A16; border: 1px solid #2A3A6A; border-radius: 12px; padding: 8px 14px; display: grid; line-height: 1.1; box-shadow: inset 0 0 18px rgba(242,90,116,.12); }
+.clock b { font-size: 30px; color: #FF7A90; letter-spacing: 1px; text-shadow: 0 0 14px rgba(255,90,116,.55); animation: flick 2.4s steps(1) infinite; }
+.clock small { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); font-family: var(--display); font-weight: 800; }
+@keyframes flick { 0%, 92%, 100% { opacity: 1; } 94% { opacity: .55; } 96% { opacity: 1; } 97% { opacity: .7; } }
+.micon { font-size: 46px; line-height: 1; animation: bob 2.6s ease-in-out infinite; filter: drop-shadow(0 8px 18px rgba(59,123,255,.35)); }
+@keyframes bob { 50% { transform: translateY(-6px) rotate(-3deg); } }
+.brief .short { font-size: clamp(18px, 2.2vw, 22px); color: #DCE6FB; font-weight: 600; margin: -4px 0 16px; text-wrap: balance; }
+.bubble { position: relative; display: inline-block; max-width: 560px; background: #1A2547; border: 1px solid #2E3F74; color: #F7D9A8; font-style: italic; border-radius: 16px 16px 16px 4px; padding: 10px 14px; font-size: 15.5px; margin: 0 0 18px; min-height: 42px; animation: pop .45s cubic-bezier(.2,.9,.3,1.3) .2s backwards; }
+.bubble .dots { display: inline-flex; gap: 4px; } .bubble .dots i { width: 7px; height: 7px; border-radius: 50%; background: #F7D9A8; opacity: .5; animation: dot 1s infinite; } .bubble .dots i:nth-child(2) { animation-delay: .15s; } .bubble .dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes dot { 50% { opacity: 1; transform: translateY(-3px); } }
+@keyframes pop { from { opacity: 0; transform: scale(.85) translateY(8px); } }
+.howv { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 18px; }
+.howv .s { display: flex; align-items: center; gap: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; font-weight: 700; font-size: 14px; animation: pop .45s cubic-bezier(.2,.9,.3,1.3) backwards; }
+.howv .s i { font-style: normal; font-size: 18px; }
+.howv .s:nth-of-type(3) { animation-delay: .25s; } .howv .s:nth-of-type(5) { animation-delay: .5s; }
+.howv .ar { color: var(--accent); font-weight: 800; animation: nudgeR 1.2s ease-in-out infinite; }
+@keyframes nudgeR { 50% { transform: translateX(4px); } }
+.goal { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; background: rgba(59,123,255,.12); border: 1px solid rgba(59,123,255,.4); border-radius: 999px; padding: 6px 14px; margin: 0 0 18px; color: #CFE0FF; }
+.goal b { color: #fff; }
+details.more { margin: 4px 0 6px; font-size: 14px; color: var(--muted); }
+details.more summary { cursor: pointer; color: #8FB2FF; font-weight: 700; font-size: 13.5px; list-style: none; display: inline-flex; gap: 6px; align-items: center; }
+details.more summary::-webkit-details-marker { display: none; }
+details.more summary::before { content: '＋'; font-weight: 800; transition: transform .3s; }
+details.more[open] summary::before { transform: rotate(45deg); }
+details.more > div { margin-top: 10px; animation: fin .3s ease-out; }
+details.more p { font-size: 15px !important; }
+.cta.cbig { font-size: 17px; padding: 15px 26px; box-shadow: 0 10px 30px rgba(59,123,255,.35); animation: ctaP 2.2s ease-in-out 1.2s infinite; }
+@keyframes ctaP { 0%, 100% { box-shadow: 0 10px 30px rgba(59,123,255,.35); } 50% { box-shadow: 0 10px 40px rgba(59,123,255,.7), 0 0 0 6px rgba(59,123,255,.15); } }
+/* play */
+details.tctx summary { cursor: pointer; font-size: 12.5px; color: #8FB2FF; font-weight: 700; list-style: none; }
+details.tctx summary::-webkit-details-marker { display: none; }
+details.tctx p { margin-top: 6px !important; }
+.coach { animation: cin .45s cubic-bezier(.2,.8,.2,1); }
+.coach.in { animation: cin .45s cubic-bezier(.2,.8,.2,1); }
+@keyframes cin { from { opacity: 0; transform: translateY(-8px); } }
+.coach > b::before { content: '→ '; display: inline-block; animation: point 1s ease-in-out infinite; }
+@keyframes point { 50% { transform: translateX(3px); } }
+.fly { position: fixed; z-index: 80; pointer-events: none; font-family: var(--mono); font-weight: 800; font-size: 16px; padding: 3px 9px; border-radius: 999px; animation: fly 1.3s ease-out forwards; white-space: nowrap; }
+.fly.L { color: #fff; background: var(--err); box-shadow: 0 6px 20px rgba(242,90,116,.5); } .fly.P { color: #062615; background: var(--ok); box-shadow: 0 6px 20px rgba(43,196,125,.5); }
+@keyframes fly { 0% { opacity: 0; transform: translateY(6px) scale(.8); } 15% { opacity: 1; transform: translateY(0) scale(1.1); } 100% { opacity: 0; transform: translateY(-46px) scale(1); } }
+.hc.hit { animation: shake .45s ease-in-out; } .hc.hitg { animation: glowG .8s ease-out; }
+@keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@keyframes glowG { from { box-shadow: 0 0 0 4px rgba(43,196,125,.5); } }
+/* compare */
+.race { display: grid; gap: 12px; margin: 8px 0 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; }
+.lane { display: grid; grid-template-columns: 120px minmax(0, 1fr) 120px; gap: 12px; align-items: center; }
+.lane .lab { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.lane .trk { height: 22px; background: #0A1226; border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+.lane .trk i { display: block; height: 100%; width: 0; border-radius: 999px; transition: width 1.4s cubic-bezier(.2,.8,.2,1); }
+.lane.l .trk i { background: linear-gradient(90deg, #B8344B, #F25A74); } .lane.p .trk i { background: linear-gradient(90deg, #1E9A62, #2BC47D); transition-delay: .25s; }
+.lane b { font-family: var(--mono); font-size: 22px; text-align: right; font-variant-numeric: tabular-nums; }
+.lane.l b { color: #FF9FB0; } .lane.p b { color: #7EE2B0; }
+.xwrap { display: flex; justify-content: center; margin: -2px 0 16px; position: relative; }
+.xbadge { position: relative; font-size: clamp(22px, 3.4vw, 32px); font-weight: 800; letter-spacing: -.5px; background: linear-gradient(90deg, #3B7BFF, #A98BFF); color: #fff; border-radius: 999px; padding: 8px 22px; box-shadow: 0 14px 40px rgba(59,123,255,.45); animation: pop .6s cubic-bezier(.2,.9,.3,1.5) 1.4s backwards; }
+.spark { position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; border-radius: 2px; opacity: 0; animation: spark 1s ease-out 1.5s forwards; }
+@keyframes spark { 0% { opacity: 1; transform: translate(-50%, -50%) rotate(0); } 100% { opacity: 0; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(220deg); } }
+.vs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.vs ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.vs li { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; animation: fin .4s ease-out backwards; }
+.vs li::before { flex: none; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; }
+.vs .l li::before { content: '✕'; background: rgba(242,90,116,.18); color: var(--err); } .vs .p li::before { content: '✓'; background: rgba(43,196,125,.18); color: var(--ok); }
+.vs .p li { border-color: rgba(43,196,125,.35); }
+.bizline { animation: fin .5s ease-out 1.8s backwards; } .bizline .ic { width: auto; padding: 0 8px; font-size: 12px; white-space: nowrap; } body { overflow-x: hidden; } .xwrap { overflow: visible; }
+@media (max-width: 640px) { .lane { grid-template-columns: 1fr auto; } .lane .trk { grid-column: 1 / -1; grid-row: 2; } .vs { grid-template-columns: 1fr; } .mnode { width: 52px; font-size: 0; } .mnode .d { width: 34px; height: 34px; font-size: 16px; } }
+.ico { width: 20px; height: 20px; flex: none; }
+.micon { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; color: #9DBCFF; background: linear-gradient(150deg, rgba(59,123,255,.28), rgba(169,139,255,.12)); border: 1px solid rgba(59,123,255,.45); font-size: 0; animation: none; filter: none; box-shadow: 0 10px 30px rgba(59,123,255,.25); }
+.micon .ico { width: 34px; height: 34px; stroke-dasharray: 120; stroke-dashoffset: 120; animation: draw 1.4s ease-out .2s forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.mnode .d { color: #9DBCFF; } .mnode .d .ico { width: 18px; height: 18px; } .mnode.done .d { color: var(--ok); }
+.goal .ico { width: 16px; height: 16px; color: #8FB2FF; }
+.xbadge { display: inline-flex; align-items: center; gap: 8px; } .xbadge .ico { width: 26px; height: 26px; fill: rgba(255,255,255,.25); }
+.howv .s .ico, .introsteps .ico { color: #8FB2FF; }
+.howv .s em, .introsteps em { display: block; font-style: normal; font-size: 10.5px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #8FB2FF; line-height: 1.2; }
+.howv .s { align-items: center; } .howv .s em { margin-right: 2px; }
+.introsteps .ar, .howv .ar { align-self: center; color: var(--accent); font-weight: 800; animation: nudgeR 1.2s ease-in-out infinite; }
+.inp.bad { border-color: var(--err); box-shadow: 0 0 0 2px rgba(242,90,116,.3); animation: shake .4s; }
+/* intro compact */
+.introsteps { display: flex !important; flex-wrap: nowrap !important; align-items: stretch; }
+.introsteps .istep { flex: 1 1 0; min-width: 0; align-items: center !important; }
+.introsteps .istep > span { display: block; line-height: 1.25; } .introsteps .istep { padding: 10px 12px; }
+@media (max-width: 760px) { .introsteps { display: grid !important; grid-template-columns: 1fr 1fr; } .introsteps .ar { display: none; } .howv .ar { display: none; } }
+
+.proof .pcase p { display: none; }
+.introsteps { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 20px; }
+.introsteps .istep { display: inline-flex; gap: 8px; align-items: center; font-weight: 700; font-size: 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; animation: pop .45s cubic-bezier(.2,.9,.3,1.3) backwards; }
+.introsteps .istep:nth-of-type(3) { animation-delay: .15s; } .introsteps .istep:nth-of-type(5) { animation-delay: .3s; } .introsteps .istep:nth-of-type(7) { animation-delay: .45s; }
+.introsteps i { font-style: normal; font-size: 18px; }
+.roles label, .route.big label { transition: transform .2s, border-color .2s, background .2s; }
+.roles label:hover, .route.big label:hover { transform: translateY(-2px); border-color: #3C5391; }
+.roles input:checked + label, .route.big input:checked + label { box-shadow: 0 0 0 1px var(--accent) inset, 0 10px 30px rgba(59,123,255,.2); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 
 <div class="wrap">
   <div class="top">
-    <div class="brand"><svg viewBox="0 0 21.6 26.66" aria-hidden="true"><path fill="#3B7BFF" d="M21.37,17.71c-.05-.2-.11-.39-.17-.59h0c-.07-.19-.14-.38-.22-.56-.08-.19-.17-.36-.26-.54-.1-.17-.21-.34-.31-.5-.11-.16-.23-.31-.36-.46h0s-.09-.1-.14-.15c-.55.66-1.21,1.22-1.96,1.69.04.05.06.11.09.16.05.09.1.18.14.27.09.19.16.39.23.6.03.09.06.18.07.27.06.2.09.41.11.63.01.11.03.21.03.32h0c.01.12.01.24.01.35,0,2.76-1.63,4.76-5.05,4.76H3.93l-.99.91-1.94,1.78h12.94c4.94,0,7.67-2.98,7.67-7.05,0-.66-.08-1.3-.23-1.9Z"/><path fill="#3B7BFF" d="M4.27,8.5L0,3.55h2.95l4.23,4.95-4.23,4.95H0l4.27-4.95Z"/><path fill="#E9EEF9" d="M20.1,4.63s-.03-.06-.04-.1c-1.24-2.76-3.99-4.53-8.52-4.53H0v2.69h11.57c2.94,0,4.69,1.01,5.56,2.61l.04.09c.47.89.68,1.94.68,3.09,0,3.3-1.67,5.83-6.28,5.83H0v11.64l2.94-2.69v-6.25h8.6c2.33,0,4.2-.49,5.63-1.34.73-.44,1.35-.97,1.86-1.59,1.22-1.47,1.81-3.41,1.81-5.59,0-1.41-.24-2.71-.74-3.85Z"/></svg> ProBatch AI <small>· Turno noche: dos consolas</small></div>
+    <div class="brand"><svg viewBox="0 0 21.6 26.66" aria-hidden="true"><path fill="#3B7BFF" d="M21.37,17.71c-.05-.2-.11-.39-.17-.59h0c-.07-.19-.14-.38-.22-.56-.08-.19-.17-.36-.26-.54-.1-.17-.21-.34-.31-.5-.11-.16-.23-.31-.36-.46h0s-.09-.1-.14-.15c-.55.66-1.21,1.22-1.96,1.69.04.05.06.11.09.16.05.09.1.18.14.27.09.19.16.39.23.6.03.09.06.18.07.27.06.2.09.41.11.63.01.11.03.21.03.32h0c.01.12.01.24.01.35,0,2.76-1.63,4.76-5.05,4.76H3.93l-.99.91-1.94,1.78h12.94c4.94,0,7.67-2.98,7.67-7.05,0-.66-.08-1.3-.23-1.9Z"/><path fill="#3B7BFF" d="M4.27,8.5L0,3.55h2.95l4.23,4.95-4.23,4.95H0l4.27-4.95Z"/><path fill="#E9EEF9" d="M20.1,4.63s-.03-.06-.04-.1c-1.24-2.76-3.99-4.53-8.52-4.53H0v2.69h11.57c2.94,0,4.69,1.01,5.56,2.61l.04.09c.47.89.68,1.94.68,3.09,0,3.3-1.67,5.83-6.28,5.83H0v11.64l2.94-2.69v-6.25h8.6c2.33,0,4.2-.49,5.63-1.34.73-.44,1.35-.97,1.86-1.59,1.22-1.47,1.81-3.41,1.81-5.59,0-1.41-.24-2.71-.74-3.85Z"/></svg> ProBatch AI <small>· Turno noche: dos consolas · <span style="opacity:.6">v4.3</span></small></div>
     <div class="steps" id="steps" aria-label="Progreso de misiones"></div>
   </div>
   <div id="hud"></div>
@@ -375,13 +485,17 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
 <script>
 (function () {
   const app = document.getElementById('app'), hudEl = document.getElementById('hud');
+  const VERSION = 'v4.3 · 15/10';
+  const showErr = m => { try { let t = document.getElementById('errToast'); if (!t) { t = document.createElement('div'); t.id = 'errToast'; t.style.cssText = 'position:fixed;left:16px;right:16px;bottom:16px;z-index:99;background:#3A0F1A;border:1px solid #F25A74;color:#FFD5DC;border-radius:12px;padding:12px 14px;font:13px/1.4 monospace;max-width:720px;margin:0 auto'; document.body.appendChild(t); } t.textContent = 'Error (' + VERSION + '): ' + m + ' — mandale una captura de esto a Enmanuel.'; } catch (e) {} };
+  window.addEventListener('error', e => showErr((e.message || 'desconocido') + (e.lineno ? ' · línea ' + e.lineno : '')));
+  window.addEventListener('unhandledrejection', e => showErr(String(e.reason && e.reason.message || e.reason)));
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const LOGO = document.querySelector('.brand svg').outerHTML;
   // Casilla que recibe el feedback de los clientes (cambiala por la de Accusys si corresponde).
   const FEEDBACK_EMAIL = 'enmanuel.tolosa@accusys.com.ar';
   // Opcional: URL de un formulario propio (Formspree, Google Apps Script, CRM) que reciba JSON por POST.
   // Solo funciona si la página se publica en un dominio propio (por ejemplo GitHub Pages). Sin endpoint, el lead copia sus respuestas y las envía por mail.
-  const LEAD_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzNBBsFfWfgg8XaPg-zgGGXNBQH4XXQCj78uCHUtWbpPDU9Vg7-vLYJAIRCIGmsg00Lag/exec';
+  const LEAD_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwQQ2d7FreyrVo_oTk7nXQ7E4nmZ2-2nOISFROswIrLa_c-xjWTtgbUQ1jtCA608I8dVA/exec';
   const S = { bank: 'tu banco', core: '', m: -1, k: -1, route: [], full: false, side: null, L: 0, P: 0, Lp: 1, Pp: 1, res: [] };
   const CORES = { cobis: 'Cobis / Topaz', bantotal: 'Bantotal', temenos: 'Temenos', otro: 'otro core' };
   // Personalización por cuenta. En claude.ai: link + #r-cio_c-cobis_b-banco-supervielle
@@ -434,6 +548,12 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
   function cost(side, mins) {
     const from = cur[side], to = from + mins; cur[side] = to;
     const el = document.getElementById('s' + side); if (!el) return;
+    if (mins > 0 && !reduce) {
+      const hb = (el.closest('.hc') || el).getBoundingClientRect(), f = document.createElement('div');
+      f.className = 'fly ' + side; f.textContent = '+' + dur(mins); f.style.right = Math.max(8, window.innerWidth - hb.right + 12) + 'px'; f.style.top = (hb.bottom - 34) + 'px';
+      document.body.appendChild(f); setTimeout(() => f.remove(), 1400);
+      const hc = el.closest('.hc'); if (hc) { const c = side === 'L' ? 'hit' : 'hitg'; hc.classList.remove(c); void hc.offsetWidth; hc.classList.add(c); }
+    }
     const t0 = performance.now(), ms = reduce ? 1 : 700;
     (function f(now) { const k = Math.min(1, (now - t0) / ms); el.textContent = dur(from + (to - from) * k); if (k < 1) requestAnimationFrame(f); })(t0);
   }
@@ -443,7 +563,7 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
     d.innerHTML = html + (c ? `<span class="c">${c}</span>` : ''); f.appendChild(d); f.scrollTop = f.scrollHeight;
   }
   function options(list) {
-    const o = $('#opts'); o.innerHTML = '';
+    const o = $('#opts'); if (!o) return; o.innerHTML = '';
     list.forEach(x => { const b = document.createElement('button'); b.className = 'opt' + (x.primary ? ' primary' : ''); b.innerHTML = x.label + (x.sub ? `<small>${x.sub}</small>` : ''); if (x.disabled) b.disabled = true; b.onclick = () => { if (x.keep) { b.disabled = true; } else o.querySelectorAll('button').forEach(y => y.disabled = true); const lbl = String(x.label).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); if (lbl !== 'Continuar') track('decision', { side: S.side, label: lbl.slice(0, 140) }, curMission()); x.go(b); }; o.appendChild(b); });
     if (list.length === 1) coach(`Tocá <b>${list[0].label.replace(/<[^>]*>/g, '')}</b> para seguir.`, '#opts button');
   }
@@ -453,6 +573,7 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
     const c = document.getElementById('coach'); if (!c) return;
     c.classList.remove('nudge'); nudged = false; lastAct = Date.now();
     c.innerHTML = `<b>Qué hacer ahora</b><span>${text}</span>`;
+    c.classList.remove('in'); void c.offsetWidth; c.classList.add('in');
     app.querySelectorAll('.pulse').forEach(e => e.classList.remove('pulse'));
     if (sel) setTimeout(() => app.querySelectorAll(sel).forEach(e => e.classList.add('pulse')), 40);
   }
@@ -503,6 +624,7 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
   // ---------- mission frame ----------
   function frame(side, taskHtml, windowHtml) {
     S.side = side; hud();
+    taskHtml = taskHtml.replace(/<p>([\s\S]*?)<\/p>/, '<details class="tctx"><summary>ⓘ Ver contexto</summary><p>$1</p></details>');
     app.innerHTML = `<div class="play"><div class="coach" id="coach" aria-live="polite"></div><div id="win">${windowHtml}</div>
       <div class="task"><span class="who ${side === 'L' ? 'l' : 'p'}">${side === 'L' ? '● Scheduler tradicional' : '✦ ProBatch AI · capacidad en desarrollo'}</span>${taskHtml}
       <div class="feed" id="feed" aria-live="polite"></div><div class="opts" id="opts"></div></div></div>`;
@@ -517,10 +639,17 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
     S.m = i; cur = { L: 0, P: 0 }; S.side = null; hud();
     const m = MISSIONS[i];
     S.stage = 'Misión ' + (i + 1); track('mission_view', {}, m.id);
-    app.innerHTML = `<section class="brief"><div class="eyebrow">Misión ${k + 1} de ${S.route.length} · ${m.kpi}</div><h1>${m.title}</h1>
-      <div class="lever"><b>Palanca</b>${m.lever}</div>
-      <p>${m.setup.replace('{bank}', esc(S.bank))}</p><div class="quote">${m.pain}</div>${k === 0 ? HOW3 : ''}${availHtml(m)}<div class="kpi">Lo que se mide: <em>${m.measure}</em></div>
-      <div class="actions" style="margin-top:0"><button class="cta" id="goL">Empezar: resolverlo como hoy</button><button class="skip" id="skipM">Saltear esta misión</button></div></section>`;
+    const mmap = S.route.map((mi, j) => `${j ? `<span class="mlink ${j <= k ? 'done' : ''}"></span>` : ''}<div class="mnode ${j < k ? 'done' : j === k ? 'now' : ''}" style="animation-delay:${j * 70}ms"><span class="d">${j < k ? ic('check') : MISSIONS[mi].icon}</span>${MISSIONS[mi].tag}</div>`).join('');
+    app.innerHTML = `<section class="brief"><div class="mmap" aria-label="Recorrido">${mmap}</div>
+      <div class="scene"><div class="clock"><small>${m.clock.startsWith('+') ? 'después' : 'hora'}</small><b>${m.clock}</b></div><div class="micon" aria-hidden="true">${m.icon}</div></div>
+      <div class="eyebrow" style="margin-top:12px">Misión ${k + 1} de ${S.route.length} · ${m.kpi}</div><h1>${m.title}</h1>
+      <p class="short">${m.short}</p>
+      <div class="bubble" id="bub"><span class="dots"><i></i><i></i><i></i></span></div>
+      ${k === 0 ? `<div class="howv"><span class="s">${ic('console')}<em>Paso 1</em>Resolvelo como hoy</span><span class="ar">→</span><span class="s">${ic('spark')}<em>Paso 2</em>Con ProBatch AI</span><span class="ar">→</span><span class="s">${ic('scale')}<em>Paso 3</em>Compará</span></div>` : ''}
+      <div><span class="goal">${ic('target')} Se mide: <b>${m.measure}</b></span></div>
+      <details class="more"><summary>Más contexto</summary><div><p>${m.setup.replace('{bank}', esc(S.bank))}</p>${availHtml(m)}</div></details>
+      <div class="actions"><button class="cta cbig" id="goL">▶ Empezar</button><button class="skip" id="skipM">Saltear esta misión</button></div></section>`;
+    setTimeout(() => { const b = document.getElementById('bub'); if (b) b.textContent = m.pain; }, reduce ? 0 : 1100);
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     const skipped = await new Promise(r => { $('#goL').onclick = () => r(false); $('#skipM').onclick = () => r(true); });
     track(skipped ? 'mission_skip' : 'mission_play', {}, m.id);
@@ -548,16 +677,22 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
     const last = S.k === S.route.length - 1;
     const x = r.L / Math.max(1, r.P);
     const [biz, bizNote] = m.biz(r, S.B);
+    const mx = Math.max(r.L, r.P, 1), saved = Math.max(0, r.L - r.P);
+    const sparks = x >= 2 ? Array.from({ length: 14 }, (_, i) => { const ang = i / 14 * Math.PI * 2, d = 90 + (i % 3) * 30; return `<i class="spark" style="--x:${Math.round(Math.cos(ang) * d * 1.6)}px;--y:${Math.round(Math.sin(ang) * d * .7)}px;background:${['#3B7BFF', '#A98BFF', '#2BC47D', '#F4A93B'][i % 4]}"></i>`; }).join('') : '';
     app.innerHTML = `<section class="brief" style="max-width:980px"><div class="eyebrow">Resultado · Misión ${S.k + 1} de ${S.route.length}${r.skipped ? ' · tiempos típicos' : ''}</div><h1>${m.title}</h1>
-      <div class="lever"><b>Palanca</b>${m.lever}</div>
-      <div class="compare"><div class="cbox l"><div class="hl">Scheduler tradicional</div><div class="n">${dur(r.L)}</div><ul>${m.sumL.map(s => `<li>${s}</li>`).join('')}</ul></div>
-      <div class="cbox p"><div class="hl">ProBatch AI</div><div class="n">${dur(r.P)}</div><ul>${m.sumP.map(s => `<li>${s}</li>`).join('')}</ul></div></div>
-      <div class="bizline"><div class="ic">1 año</div><p>${biz}<small>${bizNote} Valores de referencia: los ajustás con tus números al final.</small></p></div>
-      <div class="lesson"><small>${x >= 2 ? Math.round(x) + ' veces más rápido' : 'La diferencia'}</small>${m.lesson}</div>
-      <div style="margin-top:12px">${availHtml(m)}</div>
-      <div class="actions"><button class="cta" id="next">${last ? 'Calcular el impacto en mi operación' : 'Siguiente misión'}</button></div></section>`;
+      <div class="race"><div class="lane l"><span class="lab">Hoy</span><div class="trk"><i data-w="${r.L / mx * 100}"></i></div><b data-to="${r.L}">0 min</b></div>
+      <div class="lane p"><span class="lab">ProBatch AI</span><div class="trk"><i data-w="${Math.max(2, r.P / mx * 100)}"></i></div><b data-to="${r.P}">0 min</b></div></div>
+      <div class="xwrap">${sparks}<div class="xbadge">${ic('bolt')} ${x >= 2 ? Math.round(x) + '× más rápido' : dur(saved) + ' menos'}</div></div>
+      <div class="vs"><ul class="l">${m.sumL.map((t, i) => `<li style="animation-delay:${.5 + i * .12}s">${t}</li>`).join('')}</ul><ul class="p">${m.sumP.map((t, i) => `<li style="animation-delay:${.9 + i * .12}s">${t}</li>`).join('')}</ul></div>
+      <div class="bizline"><div class="ic">1 año</div><p>${biz}<small>${bizNote} Los ajustás con tus números al final.</small></p></div>
+      <details class="more" style="margin-top:12px"><summary>¿Por qué la diferencia?</summary><div><div class="lesson" style="margin-top:0">${m.lesson}</div><div style="margin-top:12px">${availHtml(m)}</div></div></details>
+      <div class="actions"><button class="cta cbig" id="next">${last ? 'Calcular el impacto en mi operación →' : 'Siguiente misión →'}</button></div></section>`;
+    requestAnimationFrame(() => setTimeout(() => {
+      app.querySelectorAll('.lane .trk i').forEach(i => i.style.width = i.dataset.w + '%');
+      app.querySelectorAll('.lane b[data-to]').forEach((el, n) => { const to = +el.dataset.to, t0 = performance.now() + n * 250, ms = reduce ? 1 : 1400; (function f(now) { const k = Math.max(0, Math.min(1, (now - t0) / ms)), e = 1 - Math.pow(1 - k, 3); el.textContent = dur(to * e); if (k < 1) requestAnimationFrame(f); })(performance.now()); });
+    }, 60));
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-    $('#next').onclick = () => last ? (fillTypical(), inputs()) : runStep(S.k + 1);
+    $('#next').onclick = () => last ? inputs() : runStep(S.k + 1);
   }
 
   // =====================================================================
@@ -619,7 +754,9 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
       await sleep(700);
       $('#toast').classList.add('show'); cost('P', 1);
       feed('03:07 · Aviso automático. Nadie tuvo que preguntar.', 'good', '1 min');
+      let opened = false;
       const open = async () => {
+        if (opened) return; opened = true;
         $('#toast').classList.remove('show'); $('#side').classList.add('show');
         const sb = $('#sb');
         sb.innerHTML = `<div class="agent">Agente de Alerta</div><div class="msg" id="m1"></div>`;
@@ -984,6 +1121,35 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
   };
 
   const MISSIONS = [M1, M2, M3, M4, M5, M6, M7];
+  const IC = {
+    pulse: '<path d="M3 12h4l3-8 4 16 3-8h4"/>',
+    alert: '<path d="M12 3 2 21h20L12 3z"/><path d="M12 10v5"/><path d="M12 18h.01"/>',
+    nodes: '<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7.3 8.2 10.8 15.8M16.7 8.2 13.2 15.8M8.5 6h7"/>',
+    book: '<path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2z"/><path d="M22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/>',
+    bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/>',
+    shield: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+    timer: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/>',
+    moon: '<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',
+    console: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/>',
+    spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>',
+    chart: '<path d="M4 20V10M10 20V4M16 20v-7M2 20h20"/>',
+    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+    bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+    scale: '<path d="M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM8 21h8"/>',
+    check: '<path d="m5 12 5 5 9-10"/>',
+  };
+  const ic = (n, cls) => `<svg class="ico ${cls || ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]}</svg>`;
+  const META = {
+    M1: [ic('pulse'), '03:07', 'Un job del cierre tarda el triple. Nadie avisó.'],
+    M2: [ic('alert'), '03:32', 'Un job falló y bloquea tres lotes más.'],
+    M3: [ic('nodes'), '03:40', 'Tu gerente pregunta qué se rompe si esto no termina.'],
+    M4: [ic('book'), '03:50', 'El único que sabe cómo relanzar no atiende.'],
+    M5: [ic('bell'), '04:10', '48 alertas en cadena. Solo una importa.'],
+    M6: [ic('shield'), '+7 días', 'Auditoría pide toda la evidencia del incidente.'],
+    M7: [ic('timer'), '22:00', 'El cierre ya dura 4 h 50 min y el volumen sigue creciendo.'],
+  };
+  MISSIONS.forEach((m, i) => { const x = META['M' + (i + 1)]; m.icon = x[0]; m.clock = x[1]; m.short = x[2]; m.tag = ['Desvío', 'Falla', 'Impacto', 'Conocimiento', 'Alertas', 'Auditoría', 'Ventana'][i]; });
+  const CAPS_BY_ID = { M1: 'Aviso proactivo', M2: 'Diagnóstico con IA', M3: 'Impacto en el negocio', M4: 'Captura de conocimiento', M5: 'Agrupación de alertas', M6: 'Evidencia para auditoría', M7: 'Optimización de la ventana batch' };
   MISSIONS.forEach((m, i) => m.id = 'M' + (i + 1));
   const ROLES = {
     ops: { label: 'Operaciones', sub: 'SLA, equipo y continuidad', example: 'Ej.: Gerente de Operaciones', order: ['sla', 'team', 'cost', 'infra'], route: [0, 3, 4] },
@@ -1001,19 +1167,20 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
   function intro() {
     S.m = -1; S.k = -1; S.route = []; S.res = []; S.side = null; S.B = Object.assign({}, DEFAULTS); hud(); document.getElementById('steps').innerHTML = '';
     const named = S.bank !== 'tu banco';
-    app.innerHTML = `<section class="brief"><div class="eyebrow">Evaluación gratuita · 4 minutos · Para decisores de operaciones bancarias${named ? ' · preparada para ' + esc(S.bank) : ''}</div>
+    app.innerHTML = `<section class="brief"><div class="eyebrow">Evaluación gratuita · 4 o 10 minutos · Para decisores de operaciones bancarias${named ? ' · preparada para ' + esc(S.bank) : ''}</div>
       <h1>Evaluá tu operación batch.<span class="h1sub">¿Cuánto le cuesta a ${named ? esc(S.bank) : 'tu banco'} cada noche que el cierre se complica?</span></h1>
-      <p>Viví un turno noche real: un desvío silencioso, una falla a las 3 de la mañana, un auditor que pide evidencia. Resolvelo primero como se trabaja hoy y después con ProBatch. Al final recibís un diagnóstico con el impacto en tu SLA, tu equipo, tu ventana batch y tus costos, calculado con tus números.</p>
-      <div class="promise"><span>Diagnóstico en 4 min</span><span>Con tus números</span><span>Informe para tu directorio</span><span>Sin registro previo</span></div>
+      <div class="introsteps">${[['moon', 'Viví un turno noche real'], ['console', 'Resolvelo como hoy'], ['spark', 'Miralo con ProBatch AI'], ['chart', 'Recibí tu diagnóstico']].map(([n, t], i) => `${i ? '<span class="ar">→</span>' : ''}<span class="istep">${ic(n)}<span><em>Paso ${i + 1}</em>${t}</span></span>`).join('')}</div>
       ${PROOF}
       <div class="field" style="max-width:none;margin-bottom:6px"><label>¿Desde qué rol evaluás tu operación?</label></div>
       <div class="roles">${Object.entries(ROLES).map(([k, r]) => `<input type="radio" name="role" id="role_${k}" value="${k}" ${k === S.role ? 'checked' : ''}><label for="role_${k}">${r.label}<small>${r.sub}</small></label>`).join('')}</div>
-      <div class="route"><input type="radio" name="route" id="route_q" value="q" ${S.full ? '' : 'checked'}><label for="route_q">Recorrido rápido<small>3 misiones de tu rol · 4 min</small></label><input type="radio" name="route" id="route_f" value="f" ${S.full ? 'checked' : ''}><label for="route_f">Recorrido completo<small>7 misiones · 10 min</small></label></div>
+      <div class="field" style="max-width:none;margin-bottom:6px"><label>Elegí tu evaluación</label></div>
+      <div class="route big"><input type="radio" name="route" id="route_q" value="q" ${S.full ? '' : 'checked'}><label for="route_q">Evaluación rápida · 3 situaciones<small>Las 3 que más pesan en tu rol · unos 4 minutos</small><em id="routeList"></em></label><input type="radio" name="route" id="route_f" value="f" ${S.full ? 'checked' : ''}><label for="route_f">Evaluación completa · 7 situaciones<small>Todo el turno noche · unos 10 minutos</small><em>Informe con todas las palancas: SLA, equipo, auditoría y ventana batch</em></label></div>
       <div class="selrow"><div class="field"><label for="bank">Nombre de tu banco (opcional)</label><input id="bank" type="text" maxlength="40" placeholder="Ej.: Banco Demo" autocomplete="organization" value="${named ? esc(S.bank) : ''}"></div>
       <div class="field"><label for="core">Core bancario (opcional)</label><select id="core"><option value="">Elegí tu core</option>${Object.entries(CORES).map(([k, v]) => `<option value="${k}" ${k === S.core ? 'selected' : ''}>${v.charAt(0).toUpperCase() + v.slice(1)}</option>`).join('')}</select></div></div>
-      <button class="cta" id="start">Evaluar mi operación</button>
-      <div class="note">Evaluación ilustrativa con datos de demostración. En cada etapa vas a ver qué hace ProBatch hoy en producción y qué capacidades de ProBatch AI están en desarrollo. La consola tradicional representa un scheduler genérico, no un producto en particular.</div>
-      <div class="note">Registramos tus respuestas e interacciones en este simulador para mejorar la experiencia y, si nos lo pedís, contactarte. No compartimos esta información con terceros.</div></section>`;
+      <button class="cta cbig" id="start">▶ Evaluar mi operación</button>
+      <div class="note">Simulación ilustrativa con datos de demostración; la consola tradicional representa un scheduler genérico. Registramos tus interacciones para mejorar la experiencia y no las compartimos con terceros.</div></section>`;
+    const showRoute = () => { const r = (app.querySelector('input[name=role]:checked') || {}).value || S.role; $('#routeList').textContent = 'Para ' + ROLES[r].label + ': ' + ROLES[r].route.map(i => MISSIONS[i].title).join(' · '); };
+    app.querySelectorAll('input[name=role]').forEach(x => x.onchange = showRoute); showRoute();
     $('#start').onclick = () => {
       S.bank = $('#bank').value.trim() || 'tu banco'; S.core = $('#core').value;
       S.role = (app.querySelector('input[name=role]:checked') || {}).value || 'ops';
@@ -1040,17 +1207,27 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
     track('inputs_view', {});
     app.innerHTML = `<section class="brief" style="max-width:980px"><div class="eyebrow">Último paso</div><h1>Tu operación en números</h1>
       <p>Ajustá estos valores a la realidad de ${esc(S.bank)}. Si no los tenés a mano, dejá los de referencia: son deliberadamente conservadores.</p>
-      <form id="bizf" novalidate><div class="inputs">${FIELDS.map(([k, l, h, u]) => `<div class="inp"><label for="in_${k}">${l}</label><div class="row"><input id="in_${k}" type="number" inputmode="decimal" min="0" step="any" value="${S.B[k]}"><span class="u">${u}</span></div><small>${h}</small></div>`).join('')}</div>
-      <div class="actions"><button class="cta" type="submit">Ver el informe de ${esc(S.bank === 'tu banco' ? 'mi banco' : S.bank)}</button><button class="cta ghost" type="button" id="defs">Usar valores de referencia</button><span class="fbmsg" id="bizmsg" aria-live="polite"></span></div></form></section>`;
+      <form id="bizf" novalidate><div class="inputs">${FIELDS.map(([k, l, h, u]) => `<div class="inp"><label for="in_${k}">${l}</label><div class="row"><input id="in_${k}" type="text" inputmode="decimal" autocomplete="off" value="${S.B[k]}"><span class="u">${u}</span></div><small>${h}</small></div>`).join('')}</div>
+      <div class="actions"><button class="cta" type="button" id="calc">Ver el informe de ${esc(S.bank === 'tu banco' ? 'mi banco' : S.bank)}</button><button class="cta ghost" type="button" id="defs">Usar valores de referencia</button><span class="fbmsg" id="bizmsg" aria-live="polite"></span></div></form></section>`;
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     $('#defs').onclick = () => { S.B = Object.assign({}, DEFAULTS); S.stage = 'Cargó sus números'; track('inputs_submit', { values: Object.assign({ usedDefaults: true }, S.B) }); finale(); };
-    $('#bizf').onsubmit = e => {
-      e.preventDefault();
+    const calc = () => {
       const B = {};
-      for (const [k] of FIELDS) { const v = parseFloat(String($('#in_' + k).value).replace(',', '.')); if (!isFinite(v) || v < 0) { $('#bizmsg').textContent = 'Revisá los valores: todos tienen que ser números positivos.'; $('#bizmsg').className = 'fbmsg err'; $('#in_' + k).focus(); return; } B[k] = v; }
+      app.querySelectorAll('.inp').forEach(x => x.classList.remove('bad'));
+      for (const [k] of FIELDS) {
+        let t = String($('#in_' + k).value).trim().replace(/usd|\$|%|\s/gi, '');
+        if (/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(t)) t = t.replace(/\./g, ''); // 3.000 → 3000
+        t = t.replace(',', '.');
+        const v = t === '' ? DEFAULTS[k] : parseFloat(t);
+        if (!isFinite(v) || v < 0) { $('#bizmsg').textContent = 'Revisá el valor marcado en rojo: tiene que ser un número.'; $('#bizmsg').className = 'fbmsg err'; const f = $('#in_' + k); f.closest('.inp').classList.add('bad'); f.focus(); f.scrollIntoView({ block: 'center' }); return; }
+        B[k] = v;
+      }
       B.pP = DEFAULTS.pP; if (B.crit > 100) B.crit = 100;
-      S.B = B; S.stage = 'Cargó sus números'; track('inputs_submit', { values: Object.assign({ usedDefaults: false }, B) }); finale();
+      S.B = B; S.stage = 'Cargó sus números'; track('inputs_submit', { values: Object.assign({ usedDefaults: false }, B) });
+      try { finale(); } catch (err) { console.error(err); showErr(err.message); }
     };
+    $('#calc').onclick = calc;
+    $('#bizf').onsubmit = e => { e.preventDefault(); calc(); };
   }
 
   // ---------- report ----------
@@ -1066,18 +1243,22 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
     const avoided = Math.max(0, (resolveL > B.margin ? critY : 0) - (resolveP > B.margin ? critY : 0));
     const slaCost = Math.max(0, critY * (lateL - lateP) / 60 * B.slaCostH);
     const m6 = get('M6'), auditH = Math.max(0, B.audits * (m6.L - m6.P) / 60), auditCost = auditH * B.costH;
-    const winMin = B.windowH * 60 * 75 / 290, winHY = winMin * 365 / 60;
+    const has = id => S.res.some(r => r.id === id);
+    const hasSla = ['M1', 'M2', 'M3', 'M4'].some(has), hasTeam = ['M1', 'M2', 'M3', 'M4', 'M5'].some(has), hasAudit = has('M6'), hasWin = has('M7');
+    const winMin = hasWin ? B.windowH * 60 * 75 / 290 : 0, winHY = winMin * 365 / 60;
     const total = teamCost + slaCost + auditCost;
-    return { opsL, opsP, resolveL, resolveP, incY, teamH, teamCost, critY, avoided, slaCost, auditH, auditCost, winMin, winHY, total, fte: teamH / 1760 };
+    return { opsL, opsP, resolveL, resolveP, incY, teamH, teamCost, critY, avoided, slaCost, auditH, auditCost, winMin, winHY, total, fte: teamH / 1760, hasSla, hasTeam, hasAudit, hasWin, n: S.res.length };
   }
+  const costParts = R => [R.hasSla ? `SLA USD ${fmtN(R.slaCost)}` : '', R.hasTeam ? `equipo USD ${fmtN(R.teamCost)}` : '', R.hasAudit ? `auditoría USD ${fmtN(R.auditCost)}` : ''].filter(Boolean).join(' · ');
   function reportLines() {
     const R = compute(), B = S.B;
-    return ['Informe anual estimado (valores ingresados: ' + `${B.inc} incidentes/mes, ${B.pL} personas, USD ${B.costH}/h, margen SLA ${B.margin} min, ${B.crit}% en ventana crítica, USD ${B.slaCostH}/h de incumplimiento, ventana ${B.windowH} h, ${B.audits} auditorías/año):`,
-      `- Incumplimientos de SLA evitados: ${fmtN(R.avoided)} por año`,
-      `- Horas del equipo recuperadas: ${fmtN(R.teamH)} por año (${(Math.round(R.fte * 10) / 10).toString().replace('.', ',')} personas a tiempo completo)`,
-      `- Ventana batch: ${fmtN(R.winMin)} min menos por noche, ${fmtN(R.winHY)} horas por año (potencial)`,
-      `- Costo operativo evitado: USD ${fmtN(R.total)} por año (SLA USD ${fmtN(R.slaCost)} · equipo USD ${fmtN(R.teamCost)} · auditoría USD ${fmtN(R.auditCost)})`,
-      `- Tiempo de resolución por incidente: ${dur(R.resolveL)} → ${dur(R.resolveP)}`];
+    return ['Informe anual estimado basado en ' + R.n + ' situaciones evaluadas: ' + S.res.map(r => r.title).join(', ') + '.',
+      'Valores ingresados: ' + `${B.inc} incidentes/mes, ${B.pL} personas, USD ${B.costH}/h, margen SLA ${B.margin} min, ${B.crit}% en ventana crítica, USD ${B.slaCostH}/h de incumplimiento, ventana ${B.windowH} h, ${B.audits} auditorías/año.`,
+      R.hasSla ? `- Incumplimientos de SLA evitados: ${fmtN(R.avoided)} por año` : '',
+      R.hasTeam ? `- Horas del equipo recuperadas: ${fmtN(R.teamH)} por año (${(Math.round(R.fte * 10) / 10).toString().replace('.', ',')} personas a tiempo completo)` : '',
+      R.hasWin ? `- Ventana batch: ${fmtN(R.winMin)} min menos por noche, ${fmtN(R.winHY)} horas por año (potencial)` : '',
+      R.total > 0 ? `- Costo operativo evitado: USD ${fmtN(R.total)} por año (${costParts(R)})` : '',
+      R.hasSla ? `- Tiempo de resolución por incidente: ${dur(R.resolveL)} → ${dur(R.resolveP)}` : ''].filter(Boolean);
   }
   function finale() {
     S.k = S.route.length; S.side = null; hud(); document.getElementById('steps').innerHTML = S.route.map(() => '<i class="done"></i>').join('');
@@ -1088,8 +1269,10 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
       sla: ['Incumplimientos de SLA evitados', `${fmtN(R.avoided)}<small style="font-size:15px"> /año</small>`, `Resolución de ${dur(R.resolveL)} a ${dur(R.resolveP)} frente a un margen de ${B.margin} min.`],
       team: ['Horas del equipo recuperadas', `${fmtN(R.teamH)}<small style="font-size:15px"> h/año</small>`, `Equivale a ${(Math.round(R.fte * 10) / 10).toString().replace('.', ',')} personas a tiempo completo para tareas de más valor.`],
       infra: ['Ventana batch más corta', `−${fmtN(R.winMin)}<small style="font-size:15px"> min/noche</small>`, `${fmtN(R.winHY)} horas de ventana liberadas al año para crecer sin sumar infraestructura (potencial).`],
-      cost: ['Costo operativo evitado', `USD ${fmtN(R.total)}<small style="font-size:15px"> /año</small>`, `SLA USD ${fmtN(R.slaCost)} · equipo USD ${fmtN(R.teamCost)} · auditoría USD ${fmtN(R.auditCost)}.`],
+      cost: ['Costo operativo evitado', `USD ${fmtN(R.total)}<small style="font-size:15px"> /año</small>`, `${costParts(R)}.`],
     };
+    const avail = { sla: R.hasSla && (R.avoided > 0 || R.slaCost > 0), team: R.hasTeam, infra: R.hasWin, cost: R.total > 0 };
+    const kOrder = role.order.filter(k => avail[k]);
     const head = {
       ops: `${bank} evitaría ${fmtN(R.avoided)} incumplimientos de SLA por año y recuperaría ${fmtN(R.teamH)} horas de su equipo.`,
       cio: `${bank} podría terminar el cierre ${fmtN(R.winMin)} minutos antes cada noche y resolver incidentes en ${dur(R.resolveP)} en lugar de ${dur(R.resolveL)}.`,
@@ -1098,17 +1281,18 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
       rpa: `${bank} recuperaría ${fmtN(R.teamH)} horas de intervención manual por año y resolvería incidentes en ${dur(R.resolveP)} en lugar de ${dur(R.resolveL)}.`,
     }[S.role];
     const bankName = S.bank === 'tu banco' ? 'tu banco' : S.bank;
-    app.innerHTML = `<section class="final"><div class="eyebrow">Informe para el directorio · vista ${role.label}</div>
+    app.innerHTML = `<section class="final"><div class="eyebrow">Informe para el directorio · vista ${role.label} · ${R.n} de 7 situaciones evaluadas</div>
       <h1>${head}</h1>
-      <div class="kpis">${role.order.map((k, i) => `<div class="kcard ${i === 0 ? 'lead' : ''}"><div class="hl">${K[k][0]}</div><div class="n">${K[k][1]}</div><p>${K[k][2]}</p></div>`).join('')}</div>
+      <div class="kpis n${kOrder.length}">${kOrder.map((k, i) => `<div class="kcard ${i === 0 ? 'lead' : ''}"><div class="hl">${K[k][0]}</div><div class="n">${K[k][1]}</div><p>${K[k][2]}</p></div>`).join('')}</div>
       <div class="roi"><p>¿Y el retorno de la inversión?<small>Con tu propuesta comercial calculamos el ROI y el período de repago sobre estos mismos números.</small></p><button class="cta" id="roi">Calculemos mi retorno</button></div>
       <details class="how"><summary>Cómo lo calculamos</summary><ul>
-        <li>Incidentes al año: ${B.inc} × 12 = ${fmtN(R.incY)}. Tiempo por incidente (misiones 1 a 5): ${dur(R.opsL)} hoy y ${dur(R.opsP)} con ProBatch AI, medido en tu simulación.</li>
-        <li>Horas del equipo: incidentes × (tiempo hoy × ${B.pL} personas − tiempo con ProBatch × ${B.pP} persona). Costo: × USD ${B.costH} por hora.</li>
-        <li>SLA: el ${B.crit}% de los incidentes cae en la ventana crítica (${fmtN(R.critY)} al año). Hay incumplimiento cuando la resolución (misiones 1 a 4) supera el margen de ${B.margin} min. Costo: minutos de retraso evitados × USD ${fmtN(B.slaCostH)} por hora.</li>
-        <li>Auditoría: ${B.audits} requerimientos × (${dur(S.res.find(r => r.id === 'M6').L)} − ${dur(S.res.find(r => r.id === 'M6').P)}) × USD ${B.costH} por hora.</li>
-        <li>Ventana batch: reducción del 26% simulada en la misión 7, aplicada a tu ventana de ${B.windowH} h. Es una oportunidad potencial y no se suma al costo evitado.</li>
-        <li>Las misiones que no jugaste se calculan con tiempos típicos y figuran como «típico» en la tabla.</li>
+        <li>Situaciones evaluadas: ${S.res.map(r => r.title).join(' · ')}. El cálculo usa solo los tiempos de esas situaciones.</li>
+        ${R.hasTeam ? `<li>Incidentes al año: ${B.inc} × 12 = ${fmtN(R.incY)}. Tiempo por incidente en las situaciones operativas evaluadas: ${dur(R.opsL)} hoy y ${dur(R.opsP)} con ProBatch AI.</li>
+        <li>Horas del equipo: incidentes × (tiempo hoy × ${B.pL} personas − tiempo con ProBatch × ${B.pP} persona). Costo: × USD ${B.costH} por hora.</li>` : ''}
+        ${R.hasSla ? `<li>SLA: el ${B.crit}% de los incidentes cae en la ventana crítica (${fmtN(R.critY)} al año). Hay incumplimiento cuando la resolución supera el margen de ${B.margin} min. Costo: minutos de retraso evitados × USD ${fmtN(B.slaCostH)} por hora.</li>` : ''}
+        ${R.hasAudit ? `<li>Auditoría: ${B.audits} requerimientos × (${dur(S.res.find(r => r.id === 'M6').L)} − ${dur(S.res.find(r => r.id === 'M6').P)}) × USD ${B.costH} por hora.</li>` : ''}
+        ${R.hasWin ? `<li>Ventana batch: reducción del 26% simulada, aplicada a tu ventana de ${B.windowH} h. Es una oportunidad potencial y no se suma al costo evitado.</li>` : ''}
+        ${R.n < 7 ? '<li>Las situaciones que no evaluaste no suman al cálculo. Para ver el impacto completo, hacé la evaluación de 7 situaciones.</li>' : ''}
         <li>No incluye el costo de la licencia ni los ahorros de infraestructura: ambos se evalúan con la propuesta comercial.</li></ul></details>
       <div class="actions"><button class="cta ghost" id="share">Enviar este informe a mi jefe</button><button class="cta ghost" id="edit">Cambiar mis números</button></div>
       <div class="contact" id="shareBox" hidden><div class="copybox" id="shareTxt"></div><div class="actions" style="margin-top:10px"><button class="cta ghost" id="shareCopy">Copiar el informe</button><span class="fbmsg" id="shareMsg" aria-live="polite"></span></div></div>
@@ -1125,10 +1309,10 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
         <div><h2>¿Nos das tu opinión?</h2></div><p class="sub">Tarda un minuto y nos ayuda a mostrarte lo que de verdad importa en tu operación.</p>
         <fieldset class="q"><legend>¿Qué tan identificado te sentiste con estas situaciones?</legend>
           <div class="scale" id="fbScale">${[1,2,3,4,5].map(n => `<button type="button" data-v="${n}" aria-pressed="false">${n}</button>`).join('')}<small><span>Nada</span><span>Es mi día a día</span></small></div></fieldset>
-        <fieldset class="q"><legend>¿Cuáles de estos problemas vive tu operación hoy?</legend>
-          <div class="pills">${S.res.map((r, i) => `<input type="checkbox" id="fbp${i}" value="${esc(r.kpi)}"><label for="fbp${i}">${esc(r.kpi)}</label>`).join('')}</div></fieldset>
-        <fieldset class="q"><legend>¿Qué capacidad de ProBatch AI te resultó más valiosa?</legend>
-          <div class="pills">${['Aviso proactivo', 'Diagnóstico con IA', 'Impacto en el negocio', 'Captura de conocimiento', 'Agrupación de alertas', 'Evidencia para auditoría', 'Optimización de la ventana batch'].map((c, i) => `<input type="radio" name="fbcap" id="fbc${i}" value="${c}"><label for="fbc${i}">${c}</label>`).join('')}</div></fieldset>
+        <fieldset class="q"><legend>¿Cuáles de estos problemas vive tu operación hoy? <small style="font-weight:500;color:var(--muted)">Podés elegir varios.</small></legend>
+          <div class="pills" id="fbPains">${S.res.map((r, i) => `<input type="checkbox" id="fbp${i}" value="${esc(r.kpi)}"><label for="fbp${i}">${esc(r.kpi)}</label>`).join('')}</div></fieldset>
+        <fieldset class="q"><legend>¿Qué capacidades de ProBatch AI te resultaron más valiosas? <small style="font-weight:500;color:var(--muted)">Podés elegir varias.</small></legend>
+          <div class="pills" id="fbCaps">${S.res.map(r => CAPS_BY_ID[r.id]).map((c, i) => `<input type="checkbox" name="fbcap" id="fbc${i}" value="${c}"><label for="fbc${i}">${c}</label>`).join('')}</div></fieldset>
         <fieldset class="q"><legend>¿Querés un diagnóstico de 30 minutos del cierre de tu banco, sin costo?</legend>
           <div class="pills">${['Sí, quiero el diagnóstico de 30 min', 'Más adelante', 'No por ahora'].map((c, i) => `<input type="radio" name="fbdemo" id="fbd${i}" value="${c}"><label for="fbd${i}">${c}</label>`).join('')}</div></fieldset>
         <div class="q"><label for="fbc">¿Qué le cambiarías o qué te faltó ver?</label><textarea id="fbc" maxlength="1500" placeholder="Por ejemplo: cómo se integra con nuestro core, costos, tiempos de implementación…"></textarea></div>
@@ -1161,8 +1345,9 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
       const email = $('#fbe').value.trim();
       if (!score) { msg.textContent = 'Elegí del 1 al 5 qué tan identificado te sentiste.'; msg.className = 'fbmsg err'; return; }
       if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.textContent = 'Revisá el email: parece incompleto.'; msg.className = 'fbmsg err'; $('#fbe').focus(); return; }
-      const pains = [...app.querySelectorAll('.pills input[type=checkbox]:checked')].map(x => x.value);
-      const cap = (app.querySelector('input[name=fbcap]:checked') || {}).value || '—';
+      const pains = [...app.querySelectorAll('#fbPains input:checked')].map(x => x.value);
+      const caps = [...app.querySelectorAll('#fbCaps input:checked')].map(x => x.value);
+      const cap = caps.length ? caps.join(', ') : '—';
       const demo = (app.querySelector('input[name=fbdemo]:checked') || {}).value || '—';
       const lines = [
         'FEEDBACK · SIMULADOR PROBATCH AI · TURNO NOCHE',
@@ -1174,7 +1359,7 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
         '',
         'Identificación con las situaciones (1-5): ' + score,
         'Problemas que vive hoy: ' + (pains.length ? pains.join(', ') : '—'),
-        'Capacidad más valiosa: ' + cap,
+        'Capacidades más valiosas: ' + cap,
         'Interés en demo: ' + demo,
         'Comentarios: ' + ($('#fbc').value.trim() || '—'),
         '',
