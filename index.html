@@ -378,10 +378,10 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const LOGO = document.querySelector('.brand svg').outerHTML;
   // Casilla que recibe el feedback de los clientes (cambiala por la de Accusys si corresponde).
-  const FEEDBACK_EMAIL = 'enmanueltolosa@gmail.com';
+  const FEEDBACK_EMAIL = 'enmanuel.tolosa@accusys.com.ar';
   // Opcional: URL de un formulario propio (Formspree, Google Apps Script, CRM) que reciba JSON por POST.
   // Solo funciona si la página se publica en un dominio propio (por ejemplo GitHub Pages). Sin endpoint, el lead copia sus respuestas y las envía por mail.
-  const LEAD_ENDPOINT = ''; // PEGÁ ACÁ la URL /exec de tu Apps Script
+  const LEAD_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzNBBsFfWfgg8XaPg-zgGGXNBQH4XXQCj78uCHUtWbpPDU9Vg7-vLYJAIRCIGmsg00Lag/exec';
   const S = { bank: 'tu banco', core: '', m: -1, k: -1, route: [], full: false, side: null, L: 0, P: 0, Lp: 1, Pp: 1, res: [] };
   const CORES = { cobis: 'Cobis / Topaz', bantotal: 'Bantotal', temenos: 'Temenos', otro: 'otro core' };
   // Personalización por cuenta. En claude.ai: link + #r-cio_c-cobis_b-banco-supervielle
