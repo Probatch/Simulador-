@@ -399,19 +399,19 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
   })();
   if (PARAMS.b) S.bank = PARAMS.b;
   if (PARAMS.c) { const c = PARAMS.c.toLowerCase() === 'topaz' ? 'cobis' : PARAMS.c.toLowerCase(); if (CORES[c]) S.core = c; } // topaz = cobis
-  // ---------- registro de leads y visitas ----------
-  async function store(kind, data) {
-    const row = Object.assign({ tipo: kind, fecha: new Date().toISOString(), banco: S.bank, rol: S.role, core: S.core || '', recorrido: S.full ? 'completo' : 'rapido', link: PARAMS.b ? 'personalizado' : 'generico' }, data || {});
-    let ok = null;
-    if (LEAD_ENDPOINT) {
-      // text/plain evita el preflight CORS que Google Apps Script no responde.
-      const body = JSON.stringify(row);
-      try { const r = await fetch(LEAD_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }); if (r.ok) ok = 'endpoint'; }
-      catch (e) { try { await fetch(LEAD_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }); ok = 'endpoint'; } catch (e2) {} }
-    }
-    return ok;
+  // ---------- registro para el panel administrador ----------
+  const TRACK_URL = LEAD_ENDPOINT;
+  const rid = () => (window.crypto && crypto.getRandomValues ? Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(36).padStart(2, '0')).join('') : String(Date.now()) + Math.random().toString(36).slice(2)).replace(/[^a-z0-9]/gi, '').slice(0, 24);
+  let VID = ''; try { VID = localStorage.getItem('pb_sim_vid') || ''; if (!VID) { VID = 'v' + rid(); localStorage.setItem('pb_sim_vid', VID); } } catch (e) { VID = 'v' + rid(); }
+  let SID = 's' + rid();
+  function track(event, data, mission) {
+    if (!TRACK_URL) return false;
+    const payload = JSON.stringify({ sid: SID, vid: VID, event, mission: mission || '', stage: S.stage || '', data: data || {} });
+    try { if (navigator.sendBeacon && navigator.sendBeacon(TRACK_URL, new Blob([payload], { type: 'text/plain;charset=UTF-8' }))) return true; } catch (e) {}
+    try { fetch(TRACK_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: payload }); return true; } catch (e) { return false; }
   }
-  const notify = ev => { store('visita', { evento: ev }); };
+  const curMission = () => (S.m >= 0 && S.m < MISSIONS.length) ? MISSIONS[S.m].id : '';
+  const devType = () => { const w = window.innerWidth; return w < 640 ? 'Celular' : w < 1024 ? 'Tablet' : 'Escritorio'; };
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const dur = m => { m = Math.round(m); if (m >= 60 * 24) { const d = m / (60 * 8); return (Math.round(d * 10) / 10).toString().replace('.', ',') + ' jornadas'; } const h = Math.floor(m / 60), mm = m % 60; return h ? `${h} h ${String(mm).padStart(2, '0')} min` : `${mm} min`; };
   const sleep = ms => new Promise(r => setTimeout(r, reduce ? 0 : ms));
@@ -444,7 +444,7 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
   }
   function options(list) {
     const o = $('#opts'); o.innerHTML = '';
-    list.forEach(x => { const b = document.createElement('button'); b.className = 'opt' + (x.primary ? ' primary' : ''); b.innerHTML = x.label + (x.sub ? `<small>${x.sub}</small>` : ''); if (x.disabled) b.disabled = true; b.onclick = () => { if (x.keep) { b.disabled = true; } else o.querySelectorAll('button').forEach(y => y.disabled = true); x.go(b); }; o.appendChild(b); });
+    list.forEach(x => { const b = document.createElement('button'); b.className = 'opt' + (x.primary ? ' primary' : ''); b.innerHTML = x.label + (x.sub ? `<small>${x.sub}</small>` : ''); if (x.disabled) b.disabled = true; b.onclick = () => { if (x.keep) { b.disabled = true; } else o.querySelectorAll('button').forEach(y => y.disabled = true); const lbl = String(x.label).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); if (lbl !== 'Continuar') track('decision', { side: S.side, label: lbl.slice(0, 140) }, curMission()); x.go(b); }; o.appendChild(b); });
     if (list.length === 1) coach(`Tocá <b>${list[0].label.replace(/<[^>]*>/g, '')}</b> para seguir.`, '#opts button');
   }
   // ---------- guía paso a paso ----------
@@ -516,12 +516,14 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
     S.k = k; const i = S.route[k];
     S.m = i; cur = { L: 0, P: 0 }; S.side = null; hud();
     const m = MISSIONS[i];
+    S.stage = 'Misión ' + (i + 1); track('mission_view', {}, m.id);
     app.innerHTML = `<section class="brief"><div class="eyebrow">Misión ${k + 1} de ${S.route.length} · ${m.kpi}</div><h1>${m.title}</h1>
       <div class="lever"><b>Palanca</b>${m.lever}</div>
       <p>${m.setup.replace('{bank}', esc(S.bank))}</p><div class="quote">${m.pain}</div>${k === 0 ? HOW3 : ''}${availHtml(m)}<div class="kpi">Lo que se mide: <em>${m.measure}</em></div>
       <div class="actions" style="margin-top:0"><button class="cta" id="goL">Empezar: resolverlo como hoy</button><button class="skip" id="skipM">Saltear esta misión</button></div></section>`;
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     const skipped = await new Promise(r => { $('#goL').onclick = () => r(false); $('#skipM').onclick = () => r(true); });
+    track(skipped ? 'mission_skip' : 'mission_play', {}, m.id);
     if (skipped) {
       cur = { L: m.typ[0], P: m.typ[1] };
     } else {
@@ -531,6 +533,7 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
       const pP = done('P'); m.pb(); const w2 = document.getElementById('win'); if (w2) w2.classList.add('xfade', 'in'); await pP;
     }
     S.res.push({ id: m.id, title: m.title, kpi: m.kpi, lever: m.lever, L: cur.L, P: cur.P, lesson: m.lesson, row: m.row, skipped });
+    track('mission_result', { L: Math.round(cur.L), P: Math.round(cur.P), skipped }, m.id);
     await sleep(skipped ? 0 : 600);
     showCompare(m);
   }
@@ -1016,7 +1019,7 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
       S.role = (app.querySelector('input[name=role]:checked') || {}).value || 'ops';
       S.full = ((app.querySelector('input[name=route]:checked') || {}).value === 'f');
       S.route = S.full ? MISSIONS.map((_, i) => i) : ROLES[S.role].route.slice();
-      notify('inicio');
+      S.stage = 'Empezó el turno'; track('start', { role: ROLES[S.role].label, bank: S.bank === 'tu banco' ? '' : S.bank, core: S.core ? CORES[S.core] : '', recorrido: S.full ? 'Completo' : 'Rápido', personalizado: !!PARAMS.b });
       runStep(0);
     };
   }
@@ -1034,18 +1037,19 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
   ];
   function inputs() {
     S.k = S.route.length; S.side = null; hud(); document.getElementById('steps').innerHTML = S.route.map(() => '<i class="done"></i>').join('');
+    track('inputs_view', {});
     app.innerHTML = `<section class="brief" style="max-width:980px"><div class="eyebrow">Último paso</div><h1>Tu operación en números</h1>
       <p>Ajustá estos valores a la realidad de ${esc(S.bank)}. Si no los tenés a mano, dejá los de referencia: son deliberadamente conservadores.</p>
       <form id="bizf" novalidate><div class="inputs">${FIELDS.map(([k, l, h, u]) => `<div class="inp"><label for="in_${k}">${l}</label><div class="row"><input id="in_${k}" type="number" inputmode="decimal" min="0" step="any" value="${S.B[k]}"><span class="u">${u}</span></div><small>${h}</small></div>`).join('')}</div>
       <div class="actions"><button class="cta" type="submit">Ver el informe de ${esc(S.bank === 'tu banco' ? 'mi banco' : S.bank)}</button><button class="cta ghost" type="button" id="defs">Usar valores de referencia</button><span class="fbmsg" id="bizmsg" aria-live="polite"></span></div></form></section>`;
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
-    $('#defs').onclick = () => { S.B = Object.assign({}, DEFAULTS); finale(); };
+    $('#defs').onclick = () => { S.B = Object.assign({}, DEFAULTS); S.stage = 'Cargó sus números'; track('inputs_submit', { values: Object.assign({ usedDefaults: true }, S.B) }); finale(); };
     $('#bizf').onsubmit = e => {
       e.preventDefault();
       const B = {};
       for (const [k] of FIELDS) { const v = parseFloat(String($('#in_' + k).value).replace(',', '.')); if (!isFinite(v) || v < 0) { $('#bizmsg').textContent = 'Revisá los valores: todos tienen que ser números positivos.'; $('#bizmsg').className = 'fbmsg err'; $('#in_' + k).focus(); return; } B[k] = v; }
       B.pP = DEFAULTS.pP; if (B.crit > 100) B.crit = 100;
-      S.B = B; finale();
+      S.B = B; S.stage = 'Cargó sus números'; track('inputs_submit', { values: Object.assign({ usedDefaults: false }, B) }); finale();
     };
   }
 
@@ -1077,8 +1081,9 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
   }
   function finale() {
     S.k = S.route.length; S.side = null; hud(); document.getElementById('steps').innerHTML = S.route.map(() => '<i class="done"></i>').join('');
-    notify('informe');
+    S.stage = 'Vio el informe';
     const R = compute(), B = S.B, bank = esc(S.bank), role = ROLES[S.role];
+    track('report_view', { role: role.label, bank: S.bank === 'tu banco' ? '' : S.bank, total: Math.round(R.total), avoided: R.avoided, teamH: Math.round(R.teamH), winMin: Math.round(R.winMin), resolveL: Math.round(R.resolveL), resolveP: Math.round(R.resolveP), slaCost: Math.round(R.slaCost), teamCost: Math.round(R.teamCost), auditCost: Math.round(R.auditCost), inputs: B });
     const K = {
       sla: ['Incumplimientos de SLA evitados', `${fmtN(R.avoided)}<small style="font-size:15px"> /año</small>`, `Resolución de ${dur(R.resolveL)} a ${dur(R.resolveP)} frente a un margen de ${B.margin} min.`],
       team: ['Horas del equipo recuperadas', `${fmtN(R.teamH)}<small style="font-size:15px"> h/año</small>`, `Equivale a ${(Math.round(R.fte * 10) / 10).toString().replace('.', ',')} personas a tiempo completo para tareas de más valor.`],
@@ -1138,9 +1143,10 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
       <div class="note">Simulación ilustrativa con datos de demostración. Los resultados son estimaciones basadas en tus respuestas y en los tiempos de tu simulación, no una propuesta comercial. La consola tradicional representa un scheduler enterprise genérico sin capacidades de IA, no un producto en particular. Lo marcado como «Hoy» funciona en producción. Las capacidades de ProBatch AI describen la dirección de producto, están en definición de requisitos y no constituyen un compromiso de fecha.</div></section>`;
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     const toForm = () => { const d = document.getElementById('fbd0'); if (d) d.checked = true; $('#fb').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); };
-    $('#demo').onclick = toForm; $('#roi').onclick = toForm;
-    $('#edit').onclick = inputs;
+    $('#demo').onclick = () => { track('demo_click', {}); toForm(); }; $('#roi').onclick = () => { track('roi_click', {}); toForm(); };
+    $('#edit').onclick = () => { track('edit_numbers', {}); inputs(); };
     $('#share').onclick = () => {
+      track('share_report', {});
       const text = [`Informe: impacto estimado de ProBatch AI en ${bankName}`, '', ...reportLines(), '', 'Generado con el simulador "Turno noche: dos consolas" de Accusys Technology. Estimaciones ilustrativas basadas en los valores ingresados.'].join('\n');
       $('#shareBox').hidden = false; $('#shareTxt').textContent = text;
       const a = document.createElement('a'); a.href = 'mailto:?subject=' + encodeURIComponent('Impacto estimado de ProBatch AI en ' + bankName) + '&body=' + encodeURIComponent(text); a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove();
@@ -1182,7 +1188,8 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
       const body = lines.join('\n');
       const btn = $('#fb button[type=submit]'); if (btn) btn.disabled = true;
       msg.textContent = 'Guardando tus respuestas…';
-      const saved = await store('respuesta', { nombre: $('#fbn').value.trim(), cargo: $('#fbr').value.trim(), institucion: $('#fbb').value.trim(), email, identificacion: score, problemas: pains, capacidad: cap, diagnostico: demo, comentarios: $('#fbc').value.trim(), informe: reportLines().join('\n') });
+      S.stage = 'Envió feedback';
+      const saved = track('feedback_submit', { name: $('#fbn').value.trim(), cargo: $('#fbr').value.trim(), bank: $('#fbb').value.trim(), email, score, pains, capability: cap, demo, comments: $('#fbc').value.trim(), role: ROLES[S.role].label });
       $('#fb').innerHTML = saved
         ? `<div class="thanks"><div class="ok">✓</div><h3>¡Gracias! Recibimos tus respuestas.</h3>
           <p>${demo.startsWith('Sí') ? 'Te vamos a escribir' + (email ? ' a ' + esc(email) : '') + ' para coordinar el diagnóstico de 30 minutos.' : 'Nos ayudan a mostrarte lo que de verdad importa en tu operación.'} También podés escribirnos a <b style="color:var(--ink);user-select:all">${esc(FEEDBACK_EMAIL)}</b>.</p></div>`
@@ -1199,9 +1206,12 @@ details.how ul { margin: 10px 0 0; padding-left: 18px; display: grid; gap: 4px; 
       };
       function selectBox() { const r = document.createRange(); r.selectNodeContents($('#cbx')); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); }
     };
-    $('#again').onclick = intro;
+    $('#again').onclick = () => { track('replay', {}); SID = 's' + rid(); S.stage = ''; intro(); track('open', { replay: true, referrer: document.referrer || '', device: devType(), screen: screen.width + 'x' + screen.height, lang: navigator.language }); };
   }
   intro();
+  track('open', { referrer: document.referrer || '', device: devType(), screen: screen.width + 'x' + screen.height, lang: navigator.language, url: location.href.split('#')[0].slice(0, 200) });
+  let leftAt = null;
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && leftAt !== S.stage) { leftAt = S.stage; track('leave', { stage: S.stage || 'Abrió el simulador' }, curMission()); } });
 })();
 </script>
 
